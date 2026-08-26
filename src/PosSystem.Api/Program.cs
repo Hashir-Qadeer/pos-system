@@ -9,6 +9,7 @@ using PosSystem.Infrastructure.Auth;
 using PosSystem.Infrastructure.Persistence;
 using PosSystem.Infrastructure.Persistence.Repositories;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // EF Core
@@ -20,6 +21,10 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 // JWT authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
