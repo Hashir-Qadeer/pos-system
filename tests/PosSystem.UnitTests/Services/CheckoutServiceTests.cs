@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Moq;
 using PosSystem.Application.DTOs;
+using PosSystem.Application.Interfaces;
 using PosSystem.Application.Services;
 using PosSystem.Domain.Entities;
 using PosSystem.Domain.Interfaces;
@@ -18,11 +19,16 @@ public class CheckoutServiceTests
 	private readonly Mock<IProductRepository> _productRepoMock = new();
 	private readonly Mock<IOrderRepository> _orderRepoMock = new();
 	private readonly Mock<IInventoryLogRepository> _inventoryLogRepoMock = new();
+	private readonly Mock<IInventoryNotifier> _inventoryNotifierMock = new();
 	private readonly CheckoutService _sut;
 
 	public CheckoutServiceTests()
 	{
-		_sut = new CheckoutService(_productRepoMock.Object, _orderRepoMock.Object, _inventoryLogRepoMock.Object);
+		_sut = new CheckoutService(
+			_productRepoMock.Object,
+			_orderRepoMock.Object,
+			_inventoryLogRepoMock.Object,
+			_inventoryNotifierMock.Object);
 	}
 
 	[Fact]

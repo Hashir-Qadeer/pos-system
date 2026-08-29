@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using PosSystem.Application.Interfaces;
 using PosSystem.Application.DTOs;
+using PosSystem.Application.Interfaces;
 using PosSystem.Domain.Entities;
 using PosSystem.Domain.Interfaces;
 
@@ -15,15 +16,18 @@ public class CheckoutService : ICheckoutService
 	private readonly IProductRepository _productRepository;
 	private readonly IOrderRepository _orderRepository;
 	private readonly IInventoryLogRepository _inventoryLogRepository;
+	private readonly IInventoryNotifier _inventoryNotifier;
 
 	public CheckoutService(
 		IProductRepository productRepository,
 		IOrderRepository orderRepository,
-		IInventoryLogRepository inventoryLogRepository)
+		IInventoryLogRepository inventoryLogRepository,
+		IInventoryNotifier inventoryNotifier)
 	{
 		_productRepository = productRepository;
 		_orderRepository = orderRepository;
 		_inventoryLogRepository = inventoryLogRepository;
+		_inventoryNotifier = inventoryNotifier;
 	}
 
 	public async Task<OrderResponseDto?> CheckoutAsync(CreateOrderDto dto)
@@ -75,6 +79,11 @@ public class CheckoutService : ICheckoutService
 				Reason = "Sale",
 				Timestamp = DateTime.UtcNow
 			});
+			if (product.StockQty <= product.ReorderLevel)
+			{
+				await _inventoryNotifier.NotifyLowStockAsync(
+					product.Id, product.Name, product.StockQty, product.ReorderLevel);
+			}
 		}
 
 		order.TotalAmount = total;

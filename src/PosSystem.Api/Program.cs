@@ -8,7 +8,10 @@ using PosSystem.Domain.Interfaces;
 using PosSystem.Infrastructure.Auth;
 using PosSystem.Infrastructure.Persistence;
 using PosSystem.Infrastructure.Persistence.Repositories;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SignalR;
+using PosSystem.Application.Interfaces;
+using PosSystem.Infrastructure.Realtime;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +31,7 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IInventoryLogRepository, InventoryLogRepository>();
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();
+builder.Services.AddScoped<IInventoryNotifier, InventoryNotifier>();
 
 // JWT authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -50,10 +54,21 @@ builder.Services.AddAuthentication(options =>
 	};
 });
 builder.Services.AddAuthorization();
-
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowTestPage", policy =>
+	{
+		policy.WithOrigins("http://127.0.0.1:5500", "null")
+			  .AllowAnyHeader()
+			  .AllowAnyMethod()
+			  .AllowCredentials();
+	});
+});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR();
+
 
 var app = builder.Build();
 
@@ -66,8 +81,11 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();   // must come before UseAuthorization
+app.UseCors("AllowTestPage");
+
 app.UseAuthorization();
 
 app.MapControllers();      // add this — you don't have it yet, needed for [ApiController] to work
+app.MapHub<InventoryHub>("/hubs/inventory");
 
 app.Run();
