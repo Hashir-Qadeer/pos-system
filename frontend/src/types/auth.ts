@@ -11,6 +11,7 @@ export interface RegisterDto {
 }
 
 export interface AuthResponseDto {
+    userId: number;
     token: string;
     name: string;
     role: string;

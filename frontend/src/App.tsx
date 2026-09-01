@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./features/auth/LoginPage";
 import ProductList from "./features/products/ProductList";
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import CartPage from "./features/cart/CartPage";
 function App() {
     return (
         <BrowserRouter>
@@ -13,6 +13,14 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <ProductList />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/cart"
+                    element={
+                        <ProtectedRoute>
+                            <CartPage />
                         </ProtectedRoute>
                     }
                 />

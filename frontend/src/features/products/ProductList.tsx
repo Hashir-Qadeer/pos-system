@@ -1,11 +1,14 @@
 ﻿import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchProducts } from "./productsSlice";
+import { addItem } from "../cart/cartSlice";
+import { Link } from "react-router-dom";
 
 export default function ProductList() {
     const dispatch = useAppDispatch();
     const { items, status, error } = useAppSelector((state) => state.products);
     const { name, role } = useAppSelector((state) => state.auth);
+    const cartCount = useAppSelector((state) => state.cart.items.length);
 
     useEffect(() => {
         dispatch(fetchProducts());
@@ -16,6 +19,10 @@ export default function ProductList() {
             <h2>Products</h2>
             <p>
                 Logged in as {name} ({role})
+            </p>
+
+            <p>
+                <Link to="/cart">View Cart ({cartCount})</Link>
             </p>
 
             {status === "loading" && <p>Loading...</p>}
@@ -30,8 +37,10 @@ export default function ProductList() {
                             <th style={{ padding: 8 }}>Category</th>
                             <th style={{ padding: 8 }}>Price</th>
                             <th style={{ padding: 8 }}>Stock</th>
+                            <th style={{ padding: 8 }}>Action</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         {items.map((product) => (
                             <tr key={product.id} style={{ borderBottom: "1px solid #eee" }}>
@@ -40,6 +49,26 @@ export default function ProductList() {
                                 <td style={{ padding: 8 }}>{product.categoryName}</td>
                                 <td style={{ padding: 8 }}>Rs. {product.price}</td>
                                 <td style={{ padding: 8 }}>{product.stockQty}</td>
+
+                                <td style={{ padding: 8 }}>
+                                    <button
+                                        onClick={() =>
+                                            dispatch(
+                                                addItem({
+                                                    productId: product.id,
+                                                    sku: product.sku,
+                                                    name: product.name,
+                                                    price: product.price,
+                                                    quantity: 1,
+                                                    availableStock: product.stockQty,
+                                                })
+                                            )
+                                        }
+                                        disabled={product.stockQty === 0}
+                                    >
+                                        Add to Cart
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
@@ -50,3 +79,4 @@ export default function ProductList() {
         </div>
     );
 }
+

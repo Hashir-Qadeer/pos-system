@@ -3,6 +3,7 @@ import axiosClient from "../../api/axiosClient";
 import type { LoginDto, AuthResponseDto } from "../../types/auth";
 
 interface AuthState {
+    userId: number | null;
     token: string | null;
     name: string | null;
     role: string | null;
@@ -11,6 +12,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
+    userId: localStorage.getItem("userId") ? Number(localStorage.getItem("userId")) : null,
     token: localStorage.getItem("token"),
     name: localStorage.getItem("name"),
     role: localStorage.getItem("role"),
@@ -38,6 +40,8 @@ const authSlice = createSlice({
             state.token = null;
             state.name = null;
             state.role = null;
+            state.userId = null;
+            localStorage.removeItem("userId");
             localStorage.removeItem("token");
             localStorage.removeItem("name");
             localStorage.removeItem("role");
@@ -54,6 +58,8 @@ const authSlice = createSlice({
                 state.token = action.payload.token;
                 state.name = action.payload.name;
                 state.role = action.payload.role;
+                state.userId = action.payload.userId;
+                localStorage.setItem("userId", action.payload.userId.toString());
                 localStorage.setItem("token", action.payload.token);
                 localStorage.setItem("name", action.payload.name);
                 localStorage.setItem("role", action.payload.role);
