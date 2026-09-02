@@ -26,13 +26,19 @@ export default function Navbar() {
             <Link to="/products" style={{ fontWeight: "bold" }}>
                 POS System
             </Link>
+
             <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
                 <span>
                     {name} ({role})
                 </span>
+
+                {role === "Admin" && <Link to="/categories">Categories</Link>}
+
                 <Link to="/cart">Cart ({cartCount})</Link>
+
                 <button onClick={handleLogout}>Logout</button>
             </div>
         </div>
     );
 }
+

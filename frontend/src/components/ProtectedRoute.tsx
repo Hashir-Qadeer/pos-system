@@ -2,11 +2,20 @@
 import { Navigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 
-export default function ProtectedRoute({ children }: { children: ReactNode }) {
-    const token = useAppSelector((state) => state.auth.token);
+interface ProtectedRouteProps {
+    children: ReactNode;
+    requiredRole?: string;
+}
+
+export default function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+    const { token, role } = useAppSelector((state) => state.auth);
 
     if (!token) {
         return <Navigate to="/login" replace />;
+    }
+
+    if (requiredRole && role !== requiredRole) {
+        return <Navigate to="/products" replace />;
     }
 
     return <>{children}</>;

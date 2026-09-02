@@ -5,7 +5,7 @@ import CartPage from "./features/cart/CartPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LowStockBanner from "./components/LowStockBanner";
 import { useInventoryHub } from "./hooks/useInventoryHub";
-
+import CategoriesPage from "./features/categories/CategoriesPage";
 function App() {
     useInventoryHub();
 
@@ -27,6 +27,14 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <CartPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/categories"
+                    element={
+                        <ProtectedRoute requiredRole="Admin">
+                            <CategoriesPage />
                         </ProtectedRoute>
                     }
                 />
