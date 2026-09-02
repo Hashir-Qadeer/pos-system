@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.SignalR;
 using PosSystem.Application.Interfaces;
 using PosSystem.Infrastructure.Realtime;
+using PosSystem.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,9 +57,9 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 builder.Services.AddCors(options =>
 {
-	options.AddPolicy("AllowTestPage", policy =>
+	options.AddPolicy("AllowFrontend", policy =>
 	{
-		policy.WithOrigins("http://127.0.0.1:5500", "null")
+		policy.WithOrigins("http://localhost:5174", "http://127.0.0.1:5500", "null")
 			  .AllowAnyHeader()
 			  .AllowAnyMethod()
 			  .AllowCredentials();
@@ -74,6 +75,13 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+	using var scope = app.Services.CreateScope();
+	var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+	await DataSeeder.SeedAsync(context);
+}
+
+if (app.Environment.IsDevelopment())
+{
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
@@ -81,8 +89,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();   // must come before UseAuthorization
-app.UseCors("AllowTestPage");
-
+app.UseCors("AllowFrontend");
 app.UseAuthorization();
 
 app.MapControllers();      // add this — you don't have it yet, needed for [ApiController] to work

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ namespace PosSystem.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class CategoriesController : ControllerBase
 {
 	private readonly ICategoryService _categoryService;
@@ -26,6 +28,7 @@ public class CategoriesController : ControllerBase
 	}
 
 	[HttpPost]
+	[Authorize(Roles = "Admin")]
 	public async Task<IActionResult> Create(CreateCategoryDto dto)
 	{
 		var result = await _categoryService.CreateAsync(dto);
@@ -36,6 +39,7 @@ public class CategoriesController : ControllerBase
 	}
 
 	[HttpDelete("{id}")]
+	[Authorize(Roles = "Admin")]
 	public async Task<IActionResult> Delete(int id)
 	{
 		var success = await _categoryService.DeleteAsync(id);

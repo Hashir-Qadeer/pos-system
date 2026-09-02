@@ -44,7 +44,7 @@ public class AuthService : IAuthService
 		await _userRepository.AddAsync(user);
 
 		var token = _jwtTokenGenerator.GenerateToken(user);
-		return new AuthResponseDto { Token = token, Name = user.Name, Role = user.Role };
+		return new AuthResponseDto { UserId = user.Id, Token = token, Name = user.Name, Role = user.Role };
 	}
 
 	public async Task<AuthResponseDto?> LoginAsync(LoginDto dto)
@@ -54,6 +54,6 @@ public class AuthService : IAuthService
 			return null;
 
 		var token = _jwtTokenGenerator.GenerateToken(user);
-		return new AuthResponseDto { Token = token, Name = user.Name, Role = user.Role };
+		return new AuthResponseDto { UserId = user.Id, Token = token, Name = user.Name, Role = user.Role };
 	}
 }

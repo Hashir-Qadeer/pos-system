@@ -1,4 +1,4 @@
-﻿import { useNavigate } from "react-router-dom";
+﻿import { Link,useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { removeItem, updateQuantity, checkout, clearCart } from "./cartSlice";
 import Navbar from "../../components/Navbar";
@@ -56,6 +56,12 @@ export default function CartPage() {
         <div>
             <Navbar />
             <div style={{ maxWidth: 700, margin: "40px auto", padding: "0 24px" }}>
+
+                <p style={{ marginBottom: 20 }}>
+                    <Link to="/products" className="muted">
+                        ← Back to Products
+                    </Link>
+                </p>
                 <h2>Cart</h2>
 
                 {items.length === 0 && <p className="muted">Cart is empty.</p>}

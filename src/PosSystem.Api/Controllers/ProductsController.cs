@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using PosSystem.Application.DTOs;
@@ -8,6 +9,7 @@ namespace PosSystem.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ProductsController : ControllerBase
 {
 	private readonly IProductService _productService;
@@ -25,6 +27,7 @@ public class ProductsController : ControllerBase
 	}
 
 	[HttpPost]
+	[Authorize(Roles = "Admin")]
 	public async Task<IActionResult> Create(CreateProductDto dto)
 	{
 		var result = await _productService.CreateAsync(dto);
@@ -35,6 +38,7 @@ public class ProductsController : ControllerBase
 	}
 
 	[HttpPost("{id}/reduce-stock")]
+	[Authorize(Roles = "Admin")]
 	public async Task<IActionResult> ReduceStock(int id, [FromBody] int quantity)
 	{
 		var success = await _productService.ReduceStockAsync(id, quantity);
@@ -45,6 +49,7 @@ public class ProductsController : ControllerBase
 	}
 
 	[HttpDelete("{id}")]
+	[Authorize(Roles = "Admin")]
 	public async Task<IActionResult> Delete(int id)
 	{
 		var success = await _productService.SoftDeleteAsync(id);

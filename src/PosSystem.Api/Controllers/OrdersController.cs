@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,8 @@ namespace PosSystem.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
+
 public class OrdersController : ControllerBase
 {
 	private readonly ICheckoutService _checkoutService;
