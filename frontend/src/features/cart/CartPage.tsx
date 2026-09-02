@@ -1,4 +1,4 @@
-﻿import { Link, useNavigate } from "react-router-dom";
+﻿import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { removeItem, updateQuantity, checkout, clearCart } from "./cartSlice";
 import Navbar from "../../components/Navbar";
@@ -23,100 +23,106 @@ export default function CartPage() {
 
     if (lastOrder) {
         return (
-            <>
+            <div>
                 <Navbar />
-                <div style={{ maxWidth: 500, margin: "80px auto", textAlign: "center" }}>
-                    <h2>Order Complete</h2>
-                    <p>Order #{lastOrder.id}</p>
-                    <p>Total: Rs. {lastOrder.totalAmount}</p>
-                    <ul style={{ textAlign: "left", listStyle: "none", padding: 0 }}>
-                        {lastOrder.items.map((item) => (
-                            <li key={item.productId}>
-                                {item.productName} × {item.quantity} — Rs. {item.subtotal}
-                            </li>
-                        ))}
-                    </ul>
-                    <button
-                        onClick={() => {
-                            dispatch(clearCart());
-                            navigate("/products");
-                        }}
-                    >
-                        Back to Products
-                    </button>
+                <div style={{ maxWidth: 480, margin: "80px auto", padding: "0 24px" }}>
+                    <div className="card" style={{ textAlign: "center" }}>
+                        <h2 style={{ color: "var(--success)" }}>Order Complete</h2>
+                        <p className="muted">Order #{lastOrder.id}</p>
+                        <p style={{ fontSize: 20, fontWeight: 600 }}>Total: Rs. {lastOrder.totalAmount}</p>
+                        <ul style={{ textAlign: "left", listStyle: "none", padding: 0 }}>
+                            {lastOrder.items.map((item) => (
+                                <li key={item.productId} style={{ padding: "6px 0" }}>
+                                    {item.productName} × {item.quantity} — Rs. {item.subtotal}
+                                </li>
+                            ))}
+                        </ul>
+                        <button
+                            onClick={() => {
+                                dispatch(clearCart());
+                                navigate("/products");
+                            }}
+                            style={{ width: "100%", marginTop: 12 }}
+                        >
+                            Back to Products
+                        </button>
+                    </div>
                 </div>
-            </>
+            </div>
         );
     }
 
     return (
-        <>
+        <div>
             <Navbar />
-            <div style={{ maxWidth: 600, margin: "40px auto" }}>
+            <div style={{ maxWidth: 700, margin: "40px auto", padding: "0 24px" }}>
                 <h2>Cart</h2>
-                <p>
-                    <Link to="/products">← Back to Products</Link>
-                </p>
 
-                {items.length === 0 && <p>Cart is empty.</p>}
+                {items.length === 0 && <p className="muted">Cart is empty.</p>}
 
                 {items.length > 0 && (
                     <>
-                        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                            <thead>
-                                <tr style={{ textAlign: "left", borderBottom: "1px solid #ccc" }}>
-                                    <th style={{ padding: 8 }}>Item</th>
-                                    <th style={{ padding: 8 }}>Price</th>
-                                    <th style={{ padding: 8 }}>Qty</th>
-                                    <th style={{ padding: 8 }}>Subtotal</th>
-                                    <th style={{ padding: 8 }}></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {items.map((item) => (
-                                    <tr key={item.productId} style={{ borderBottom: "1px solid #eee" }}>
-                                        <td style={{ padding: 8 }}>{item.name}</td>
-                                        <td style={{ padding: 8 }}>Rs. {item.price}</td>
-                                        <td style={{ padding: 8 }}>
-                                            <input
-                                                type="number"
-                                                min={1}
-                                                max={item.availableStock}
-                                                value={item.quantity}
-                                                onChange={(e) =>
-                                                    dispatch(
-                                                        updateQuantity({
-                                                            productId: item.productId,
-                                                            quantity: Number(e.target.value),
-                                                        })
-                                                    )
-                                                }
-                                                style={{ width: 50 }}
-                                            />
-                                        </td>
-                                        <td style={{ padding: 8 }}>Rs. {item.price * item.quantity}</td>
-                                        <td style={{ padding: 8 }}>
-                                            <button onClick={() => dispatch(removeItem(item.productId))}>Remove</button>
-                                        </td>
+                        <div className="card" style={{ padding: 0, overflow: "hidden", marginBottom: 20 }}>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Price</th>
+                                        <th>Qty</th>
+                                        <th>Subtotal</th>
+                                        <th></th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {items.map((item) => (
+                                        <tr key={item.productId}>
+                                            <td>{item.name}</td>
+                                            <td>Rs. {item.price}</td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    min={1}
+                                                    max={item.availableStock}
+                                                    value={item.quantity}
+                                                    onChange={(e) =>
+                                                        dispatch(
+                                                            updateQuantity({
+                                                                productId: item.productId,
+                                                                quantity: Number(e.target.value),
+                                                            })
+                                                        )
+                                                    }
+                                                    style={{ width: 60 }}
+                                                />
+                                            </td>
+                                            <td>Rs. {item.price * item.quantity}</td>
+                                            <td>
+                                                <button className="danger" onClick={() => dispatch(removeItem(item.productId))}>
+                                                    Remove
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
 
-                        <h3 style={{ textAlign: "right" }}>Total: Rs. {total}</h3>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                            <h3 style={{ margin: 0 }}>Total: Rs. {total}</h3>
+                        </div>
 
-                        {checkoutError && <p style={{ color: "red" }}>{checkoutError}</p>}
+                        {checkoutError && <p className="error-text">{checkoutError}</p>}
 
                         <button
                             onClick={handleCheckout}
                             disabled={checkoutStatus === "loading"}
-                            style={{ width: "100%", padding: 10, marginTop: 12 }}
+                            style={{ width: "100%", padding: 14, marginTop: 16, fontSize: 16 }}
                         >
                             {checkoutStatus === "loading" ? "Processing..." : "Checkout"}
                         </button>
                     </>
                 )}
             </div>
-        </>
+        </div>
     );
 }

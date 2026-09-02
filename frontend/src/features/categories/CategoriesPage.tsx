@@ -22,39 +22,42 @@ export default function CategoriesPage() {
     return (
         <div>
             <Navbar />
-            <div style={{ maxWidth: 500, margin: "40px auto" }}>
+            <div style={{ maxWidth: 500, margin: "40px auto", padding: "0 24px" }}>
                 <h2>Categories</h2>
 
-                <form onSubmit={handleAdd} style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+                <form onSubmit={handleAdd} style={{ display: "flex", gap: 8, marginBottom: 20 }}>
                     <input
                         type="text"
                         placeholder="New category name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        style={{ flex: 1, padding: 8 }}
+                        style={{ flex: 1 }}
                     />
                     <button type="submit">Add</button>
                 </form>
 
-                {error && <p style={{ color: "red" }}>{error}</p>}
-                {status === "loading" && <p>Loading...</p>}
+                {error && <p className="error-text">{error}</p>}
+                {status === "loading" && <p className="muted">Loading...</p>}
 
-                <ul style={{ listStyle: "none", padding: 0 }}>
+                <div className="card" style={{ padding: 0 }}>
                     {items.map((category) => (
-                        <li
+                        <div
                             key={category.id}
                             style={{
                                 display: "flex",
                                 justifyContent: "space-between",
-                                padding: "8px 0",
-                                borderBottom: "1px solid #333",
+                                alignItems: "center",
+                                padding: "14px 20px",
+                                borderBottom: "1px solid var(--border)",
                             }}
                         >
                             {category.name}
-                            <button onClick={() => dispatch(deleteCategory(category.id))}>Delete</button>
-                        </li>
+                            <button className="danger" onClick={() => dispatch(deleteCategory(category.id))}>
+                                Delete
+                            </button>
+                        </div>
                     ))}
-                </ul>
+                </div>
             </div>
         </div>
     );
