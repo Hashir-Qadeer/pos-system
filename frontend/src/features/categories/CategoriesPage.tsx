@@ -1,7 +1,7 @@
 ﻿import { useEffect, useState, type FormEvent } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchCategories, createCategory, deleteCategory } from "./categoriesSlice";
-import Navbar from "../../components/Navbar";
+import AppShell from "../../components/AppShell";
 
 export default function CategoriesPage() {
     const dispatch = useAppDispatch();
@@ -20,11 +20,11 @@ export default function CategoriesPage() {
     };
 
     return (
-        <div>
-            <Navbar />
-            <div style={{ maxWidth: 500, margin: "40px auto", padding: "0 24px" }}>
-                <h2>Categories</h2>
+        <AppShell>
+            <h1>Categories</h1>
+            <p className="muted">Organize your product catalog.</p>
 
+            <div style={{ maxWidth: 480, marginTop: 20 }}>
                 <form onSubmit={handleAdd} style={{ display: "flex", gap: 8, marginBottom: 20 }}>
                     <input
                         type="text"
@@ -40,6 +40,9 @@ export default function CategoriesPage() {
                 {status === "loading" && <p className="muted">Loading...</p>}
 
                 <div className="card" style={{ padding: 0 }}>
+                    {items.length === 0 && status === "idle" && (
+                        <p className="muted" style={{ padding: 20 }}>No categories yet.</p>
+                    )}
                     {items.map((category) => (
                         <div
                             key={category.id}
@@ -51,7 +54,7 @@ export default function CategoriesPage() {
                                 borderBottom: "1px solid var(--border)",
                             }}
                         >
-                            {category.name}
+                            <span style={{ fontWeight: 500 }}>{category.name}</span>
                             <button className="danger" onClick={() => dispatch(deleteCategory(category.id))}>
                                 Delete
                             </button>
@@ -59,6 +62,6 @@ export default function CategoriesPage() {
                     ))}
                 </div>
             </div>
-        </div>
+        </AppShell>
     );
 }
