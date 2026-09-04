@@ -8,8 +8,7 @@ export default function LowStockBanner() {
     if (alerts.length === 0) return null;
 
     return (
-        <div style={{ position: "fixed", top: 70, right: 12, zIndex: 1000, width: 280 }}>
-            {alerts.map((alert, index) => (
+        <div style={{ position: "fixed", top: 76, right: 20, zIndex: 1000, width: 280 }}>            {alerts.map((alert, index) => (
                 <div
                     key={`${alert.productId}-${alert.timestamp}`}
                     style={{
