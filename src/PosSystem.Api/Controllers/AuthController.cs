@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PosSystem.Application.DTOs;
 using PosSystem.Application.Services;
-
+using Microsoft.AspNetCore.Authorization;
 namespace PosSystem.Api.Controllers;
 
 [ApiController]
@@ -16,6 +17,8 @@ public class AuthController : ControllerBase
 	}
 
 	[HttpPost("register")]
+	[Authorize(Roles = "Admin")]
+
 	public async Task<IActionResult> Register(RegisterDto dto)
 	{
 		var result = await _authService.RegisterAsync(dto);

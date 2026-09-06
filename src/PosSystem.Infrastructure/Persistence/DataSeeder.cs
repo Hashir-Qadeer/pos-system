@@ -1,12 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PosSystem.Domain.Entities;
-
 namespace PosSystem.Infrastructure.Persistence;
 
 public static class DataSeeder
 {
 	public static async Task SeedAsync(AppDbContext context)
 	{
+		if (!await context.Users.AnyAsync())
+		{
+			context.Users.Add(new User
+			{
+				Name = "Admin",
+				Email = "admin@possystem.com",
+				PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
+				Role = "Admin",
+				CreatedAt = DateTime.UtcNow
+			});
+			await context.SaveChangesAsync();
+		}
 		// Idempotent guard — never re-seed if categories already exist
 		if (await context.Categories.AnyAsync())
 			return;
@@ -70,7 +81,7 @@ public static class DataSeeder
 			new() { Sku = "PCR-002", Name = "Head & Shoulders Shampoo 200ml", Price = 550, StockQty = 15, ReorderLevel = 5, CategoryId = personalCare.Id, IsActive = true },
 			new() { Sku = "PCR-003", Name = "Nivea Body Lotion 200ml", Price = 620, StockQty = 12, ReorderLevel = 4, CategoryId = personalCare.Id, IsActive = true },
 		};
-
+		
 		context.Products.AddRange(products);
 		await context.SaveChangesAsync();
 	}
