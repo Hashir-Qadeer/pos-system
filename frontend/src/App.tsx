@@ -6,6 +6,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import LowStockBanner from "./components/LowStockBanner";
 import { useInventoryHub } from "./hooks/useInventoryHub";
 import CategoriesPage from "./features/categories/CategoriesPage";
+import DashboardPage from "./features/dashboard/DashboardPage";
+import ManageProductsPage from "./features/products/ManageProductsPage";
 function App() {
     useInventoryHub();
 
@@ -35,6 +37,22 @@ function App() {
                     element={
                         <ProtectedRoute requiredRole="Admin">
                             <CategoriesPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <ProtectedRoute requiredRole="Admin">
+                            <DashboardPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/manage-products"
+                    element={
+                        <ProtectedRoute requiredRole="Admin">
+                            <ManageProductsPage />
                         </ProtectedRoute>
                     }
                 />

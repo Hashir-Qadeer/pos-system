@@ -7,6 +7,26 @@ export default function Sidebar() {
     return (
         <div className="sidebar">
             <div className="sidebar-logo">POS System</div>
+            <div className="nav-section-label">Menu</div>
+
+            {role === "Admin" && (
+                <NavLink to="/dashboard" className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <path d="M3 9h18M9 21V9" />
+                    </svg>
+                    Dashboard
+                </NavLink>
+            )}
+
+            {role === "Admin" && (
+                <NavLink to="/manage-products" className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.59 3.24H4a1 1 0 0 0-1 1v5.59a2 2 0 0 0 .59 1.41l9.58 9.59a2 2 0 0 0 2.83 0l4.59-4.59a2 2 0 0 0 0-2.83Z" />
+                    </svg>
+                    Products
+                </NavLink>
+            )}
 
             <NavLink to="/products" className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
